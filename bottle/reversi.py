@@ -17,7 +17,6 @@ class color(Enum):
     PRETO = 2
 
 class partida():
-
     def __init__(self):
         self.jogadores = []
         self.tabuleiro = tabuleiro()
@@ -57,7 +56,6 @@ class partida():
                 self.jogadorVez = j
                 return self.jogadorVez
 
-
     def fim(self):
         if len(self.tabuleiro.pecas) == 64: 
             return True
@@ -74,11 +72,7 @@ class partida():
     def iniciar(self):
         self.defineVez()
         while(self.fim() == False):
-            print('______________________________ REVERSI_______________________________')
-            print('=====================================================================')
-            print('Placar')
-            for j in self.jogadores:
-                print('Jogador {0}: {1}'.format(j.nome, self.tabuleiro.contaPecas(j.cor)))
+            self.placa()
             self.tabuleiro.desenha()
             novaPeca = None
             while(True):
@@ -96,6 +90,13 @@ class partida():
             self.tabuleiro.adicionaPeca(novaPeca)
 
             self.defineVez()
+
+    def placa(self):
+        print('______________________________ REVERSI_______________________________')
+        print('=====================================================================')
+        print('Placar')
+        for j in self.jogadores:
+            print('Jogador {0}: {1}'.format(j.nome, self.tabuleiro.contaPecas(j.cor)))
 
 class peca():
     def __init__(self, eixoX, eixoY, color):
@@ -146,6 +147,7 @@ class tabuleiro():
             if p.cor == cor:
                 conta+= 1
         return conta
+    
     def desenha(self, tamanho=8):
         print("  "+"  ".join(self.alf))
             
@@ -168,7 +170,6 @@ class tipoMenu(Enum):
     adicionarComputador = 3
     removerJogador = 4
     configuracao = 5
-
 
 class menu():
     def __init__(self):
@@ -224,9 +225,6 @@ class menu():
             except Exception:
                 print('Opção inválida')
 
-
-
-
     def exibeMenuAdicionarJogador(self):
         return len(self.p.jogadores) <= 2
     
@@ -240,7 +238,3 @@ class menu():
         return len(self.p.jogadores) == 1
 
 menu().iniciar()
-# partida = partida()
-# partida.adicionarJogador(jogador('Guimaraes', color.PRETO))
-# partida.adicionarJogador(jogador('thiago', color.BRANCO))
-# partida.iniciar()
