@@ -17,23 +17,33 @@ class color(Enum):
     PRETO = 2
 
 class partida():
+
     def __init__(self):
         self.jogadores = []
         self.tabuleiro = tabuleiro()
         self.jogadorVez = None
+        self.cores = [color.BRANCO, color.PRETO]
 
     def adicionarJogador(self, jogador):
         if len(self.jogadores) == 2:
             return False
             print('Só é permitido dois jogadores')
+        jogador.cor = self.cores.pop()
         self.jogadores.append(jogador)
     
     def removerJogador(self, nome):
         for j in self.jogadores:
             if j.nome == nome:
-                self.jogadores.remove(nome)
+                self.cores.append(j.cor)
+                self.jogadores.remove(j)
                 break
         print('Jogador não encontrado')
+
+    def buscaNomeJogador(self, cor):
+        for j in self.jogadores:
+            if j.cor == cor:
+                return j.nome
+        return 'Sem Jogador'
 
     def defineVez(self):
         if(self.jogadorVez == None):
@@ -64,7 +74,12 @@ class partida():
     def iniciar(self):
         self.defineVez()
         while(self.fim() == False):
-            self.tabuleiro.carrega()
+            print('______________________________ REVERSI_______________________________')
+            print('=====================================================================')
+            print('Placar')
+            for j in self.jogadores:
+                print('Jogador {0}: {1}'.format(j.nome, self.tabuleiro.contaPecas(j.cor)))
+            self.tabuleiro.desenha()
             novaPeca = None
             while(True):
                 posicao = str(input('\nVez do Jogador {}: '.format(self.jogadorVez.nome))).lower()
@@ -95,10 +110,9 @@ class peca():
         return self.eixoX == other.eixoX and self.eixoY == other.eixoY 
 
 class jogador():
-    c = [color.PRETO, color.BRANCO]
     def __init__(self, nome):
         self.nome = nome
-        self.cor = self.c.pop()
+        self.cor = None
 
     def jogar(self, x, y):
         return peca(x, y, self.cor)
@@ -126,7 +140,13 @@ class tabuleiro():
                 return peca.cor
         return color.NENHUM
 
-    def carrega(self, tamanho=8):
+    def contaPecas(self, cor):
+        conta = 0
+        for p in self.pecas:
+            if p.cor == cor:
+                conta+= 1
+        return conta
+    def desenha(self, tamanho=8):
         print("  "+"  ".join(self.alf))
             
         for l in range(tamanho):
@@ -155,13 +175,17 @@ class menu():
         self.menus = [tipoMenu.iniciarPartida, tipoMenu.adicionarJogador, tipoMenu.adicionarComputador, tipoMenu.removerJogador, tipoMenu.configuracao]
         self.p = None
     def carregar(self):
-        print('__________________________________REVERSI_____________________________')
-        print('======================================================================')
-        print('1------------------------------- 1 2---------------------------------2')
-        print('|Jogador                         | |Jogador                          |')
-        print('|Pontuação                       | |Pontuação                        |')
-        print('1------------------------------- 1 2---------------------------------2')
-        print('======================================================================')
+        os.system('cls') # on windows
+        print('______________________________ REVERSI_______________________________')
+        print('=====================================================================')
+        print('1------------------------------- 1 2--------------------------------2')
+        j1 = self.p.buscaNomeJogador(color.PRETO)
+        j2 = self.p.buscaNomeJogador(color.BRANCO)
+        space = '--------------------------------'
+        print('|{0}| |{1}|'.format(j1+space[0:32-len(j1)], j2+space[0:32-len(j2)]))
+        print('|Pontuação                       | |Pontuação                       |')
+        print('1------------------------------- 1 2--------------------------------2')
+        print('=====================================================================')
         tempMenu = self.menus[:]
 
         if self.exibeMenuAdicionarJogador() == False:
@@ -173,6 +197,9 @@ class menu():
         if self.exibeMenuRemoverJogador() == False:
             tempMenu.remove(tipoMenu.removerJogador)
 
+        if self.exibeMenuAdicionarComputador() == False:
+            tempMenu.remove(tipoMenu.adicionarComputador)
+
         for menu in tempMenu:
             print(str(menu.value)+'.'+str(menu))
             print('-------------------------------')
@@ -180,22 +207,37 @@ class menu():
     def iniciar(self):
         self.p = partida()
         while True:
-            self.carregar()
-            opcaoMenu = int(input('\nSelecione menu: '))
-            if tipoMenu.iniciarPartida.value == opcaoMenu and self.exibeMenuIniciarPartida() == True:
-                self.p.iniciar()
-            elif tipoMenu.adicionarJogador.value == opcaoMenu:
-                nome = str(input('\nNome do Jogador: '))
-                self.p.adicionarJogador(jogador(nome))
+            try:
+                #os.system('cls') # on windows
+                self.carregar()
+                opcaoMenu = int(input('\nSelecione menu: '))
+                if tipoMenu.iniciarPartida.value == opcaoMenu and self.exibeMenuIniciarPartida() == True:
+                    self.p.iniciar()
+                elif tipoMenu.adicionarJogador.value == opcaoMenu:
+                    nome = str(input('\nNome do Jogador: '))
+                    self.p.adicionarJogador(jogador(nome))
+                elif tipoMenu.removerJogador.value == opcaoMenu:
+                    nome = str(input('\nNome do Jogador: '))
+                    self.p.removerJogador(nome)
+                else:
+                    print('Opção inválida')
+            except Exception:
+                print('Opção inválida')
+
+
+
 
     def exibeMenuAdicionarJogador(self):
-        return len(self.p.jogadores) < 2
+        return len(self.p.jogadores) <= 2
     
     def exibeMenuRemoverJogador(self):
-        return len(self.p.jogadores) > 1
+        return len(self.p.jogadores) >= 1
     
     def exibeMenuIniciarPartida(self):
         return len(self.p.jogadores) == 2
+    
+    def exibeMenuAdicionarComputador(self):
+        return len(self.p.jogadores) == 1
 
 menu().iniciar()
 # partida = partida()
