@@ -397,4 +397,26 @@ words = ['abc', 'b', 'c']
 # import sys
 # sys.stderr.write('Warning, log file not found starting a new one\n')
 
+import os
+colors = {
+        'red'       :   '\033[91m',
+        'green'     :   '\033[92m',
+        'yellow'    :   '\033[93m',
+        'blue'      :   '\033[94m',
+        'purple'    :   '\033[95m',
+        'cyan'      :   '\033[96m',
+        'white'     :   '\033[97m',
+        'wild'      :   '',
+        'dwild'     :   '',
+        'dred'       :   '\033[31m',
+        'dgreen'     :   '\033[32m',
+        'dyellow'    :   '\033[33m',
+        'dblue'      :   '\033[34m',
+        'dpurple'    :   '\033[35m',
+        'dcyan'      :   '\033[36m',
+        'dwhite'     :   '\033[37m',
+    }
+print('\033[91mThiago')
+
+
 

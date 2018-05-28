@@ -41,7 +41,7 @@ class partida():
     def buscaNomeJogador(self, cor):
         for j in self.jogadores:
             if j.cor == cor:
-                return j.nome
+                return '\033[91m'+j.nome+'\033[0m'
         return 'Sem Jogador'
 
     def defineVez(self):
@@ -156,11 +156,11 @@ class tabuleiro():
             for c in range(tamanho):
                 color = self.setaCor(l,c)
                 if color == color.BRANCO:
-                    linha += "[O]"
+                    linha += "[\033[32m\u2666\033[0m]"
                 elif color == color.PRETO:
-                    linha += '[X]'
+                    linha += "[\033[94m\u2666\033[0m]"
                 else:
-                    linha += '[ ]'
+                    linha += "[ ]"
             print(linha,end='\n')
 
 class tipoMenu(Enum):
@@ -177,7 +177,8 @@ class menu():
         self.p = None
     def carregar(self):
         os.system('cls') # on windows
-        print('______________________________ REVERSI_______________________________')
+        os.system('cls' if os.name == 'nt' else 'clear')
+        print('______________________________ \033[91mREVERSI\033[0m_______________________________')
         print('=====================================================================')
         print('1------------------------------- 1 2--------------------------------2')
         j1 = self.p.buscaNomeJogador(color.PRETO)
