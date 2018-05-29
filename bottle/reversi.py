@@ -26,7 +26,6 @@ class partida():
     def adicionarJogador(self, jogador):
         if len(self.jogadores) == 2:
             return False
-            print('Só é permitido dois jogadores')
         jogador.cor = self.cores.pop()
         self.jogadores.append(jogador)
     
@@ -38,11 +37,11 @@ class partida():
                 break
         print('Jogador não encontrado')
 
-    def buscaNomeJogador(self, cor):
+    def buscaJogador(self, cor):
         for j in self.jogadores:
             if j.cor == cor:
-                return '\033[91m'+j.nome+'\033[0m'
-        return 'Sem Jogador'
+                return j
+        return None
 
     def defineVez(self):
         if(self.jogadorVez == None):
@@ -115,6 +114,34 @@ class jogador():
     def jogar(self, x, y):
         return peca(x, y, self.cor)
 
+    def nomeColorido(self):
+        colors = {
+        'red'       :   '\033[91m',
+        'green'     :   '\033[92m',
+        'yellow'    :   '\033[93m',
+        'blue'      :   '\033[94m',
+        'purple'    :   '\033[95m',
+        'cyan'      :   '\033[96m',
+        'white'     :   '\033[97m',
+        'wild'      :   '',
+        'dwild'     :   '',
+        'dred'       :   '\033[31m',
+        'dgreen'     :   '\033[32m',
+        'dyellow'    :   '\033[33m',
+        'dblue'      :   '\033[34m',
+        'dpurple'    :   '\033[35m',
+        'dcyan'      :   '\033[36m',
+        'dwhite'     :   '\033[37m',
+        }
+    
+        corPeca = { 
+            color.BRANCO : colors['green'], 
+            color.PRETO : colors['blue'],
+            color.NENHUM: "\033[0m]"
+        }
+        
+        return "{0}{1}{2}".format(corPeca[self.cor], self.nome, corPeca[color.NENHUM])
+
 class tabuleiro():
     def __init__(self):
         self.alf = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
@@ -137,8 +164,8 @@ class tabuleiro():
     def desenha(self):
         print("  "+"  ".join(self.alf))
             
-        for l in list(self.matris):
-            linha = ''
+        for idx, l in list(self.matris):
+            linha = str(idx+1)
             for item in list(l):
                 if item == None:
                     linha += "[ ]"
@@ -161,13 +188,14 @@ class menu():
         self.menus = [tipoMenu.iniciarPartida, tipoMenu.adicionarJogador, tipoMenu.adicionarComputador, tipoMenu.removerJogador, tipoMenu.configuracao]
         self.p = None
     def carregar(self):
-        # os.system('cls') # on windows
-        # os.system('cls' if os.name == 'nt' else 'clear')
+        os.system('cls' if os.name == 'nt' else 'clear')
         print('______________________________ \033[91mREVERSI\033[0m_______________________________')
         print('=====================================================================')
         print('1------------------------------- 1 2--------------------------------2')
-        j1 = self.p.buscaNomeJogador(color.PRETO)
-        j2 = self.p.buscaNomeJogador(color.BRANCO)
+        j1 = self.p.buscaJogador(color.PRETO) or "Sem Jogador"
+        if isinstance(j1, jogador): j1 = j1.nomeColorido() 
+        j2 = self.p.buscaJogador(color.BRANCO) or "Sem Jogador"
+        if isinstance(j2, jogador): j2 = j2.nomeColorido() 
         space = '--------------------------------'
         print('|{0}| |{1}|'.format(j1+space[0:32-len(j1)], j2+space[0:32-len(j2)]))
         print('|Pontuação                       | |Pontuação                       |')

@@ -418,12 +418,17 @@ words = ['abc', 'b', 'c']
 #     }
 # print('\033[91mThiago')
 
-class A:
-    def __init__(self):
-        self.nome = 'thiago'
+# class A:
+#     def __init__(self):
+#         self.nome = 'thiago'
 
-tab = [[ None for x in range(8)] for y in range(8)]
+# tab = [[ None for x in range(8)] for y in range(8)]
 
-tab[0][0]= A()
-print([c for l in list(tab) for c in list(l) if isinstance(c, A) and c.nome == 'thiago'][0].nome)
+# tab[0][0]= A()
+# print([c for l in list(tab) for c in list(l) if isinstance(c, A) and c.nome == 'thiago'][0].nome)
+
+import sys
+import os
+os.system('cls' if os.name == 'nt' else 'clear')
+print("\t\t\033[94m      || ||\033[92m ||\ ||  \033[91m// \\\\\n\033[0m")
 
