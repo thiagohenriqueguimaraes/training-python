@@ -57,12 +57,9 @@ class partida():
                 return self.jogadorVez
 
     def fim(self):
-        if len(self.tabuleiro.pecas) == 64: 
+        pecas = [p for l in list(self.tabuleiro.matris) for p in list(l) if isinstance(p, peca)]
+        if pecas.count == 64: 
             return True
-        pecas = []
-        for p in self.tabuleiro.pecas:
-            pecas.append(p.cor)
-        pecas = list(set(pecas))
 
         if len(pecas) == 1: 
             return True
@@ -108,7 +105,7 @@ class peca():
         return str(self.__dict__)
 
     def __eq__(self, other): 
-        return self.eixoX == other.eixoX and self.eixoY == other.eixoY 
+        return other != None and self.eixoX == other.eixoX and self.eixoY == other.eixoY 
 
 class jogador():
     def __init__(self, nome):
@@ -121,47 +118,35 @@ class jogador():
 class tabuleiro():
     def __init__(self):
         self.alf = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
-        self.pecas = [peca(3,3, color.BRANCO), peca(4,4, color.BRANCO), peca(4,3, color.PRETO),peca(3,4, color.PRETO)]
-    
+        self.matris = [[None for x in range(8)] for y in range(8)]
+        self.adicionaPeca(peca(3,3, color.BRANCO))
+        self.adicionaPeca(peca(4,4, color.BRANCO))
+        self.adicionaPeca(peca(4,3, color.PRETO))
+        self.adicionaPeca(peca(3,4, color.PRETO))
+
     def pecaExiste(self, peca):
-        for p in self.pecas:
-            if p == peca:
-                return True
-        return False
+        return self.matris[peca.eixoX][peca.eixoY] != None
 
     def adicionaPeca(self, peca):
-        for p in self.pecas:
-            if(p == peca):
-                return False
-        self.pecas.append(peca)
-
-    def setaCor(self, x, y):
-        for peca in self.pecas:
-            if(peca.eixoX == x and peca.eixoY == y):
-                return peca.cor
-        return color.NENHUM
+        self.matris[peca.eixoX][peca.eixoY] = peca
 
     def contaPecas(self, cor):
-        conta = 0
-        for p in self.pecas:
-            if p.cor == cor:
-                conta+= 1
-        return conta
+        pecas = [p for l in list(self.matris) for p in list(l) if isinstance(p, peca) and p.cor == cor]
+        return pecas.count
     
-    def desenha(self, tamanho=8):
+    def desenha(self):
         print("  "+"  ".join(self.alf))
             
-        for l in range(tamanho):
-            linha = str(l+1)
-            for c in range(tamanho):
-                color = self.setaCor(l,c)
-                if color == color.BRANCO:
-                    linha += "[\033[32m\u2666\033[0m]"
-                elif color == color.PRETO:
-                    linha += "[\033[94m\u2666\033[0m]"
-                else:
+        for l in list(self.matris):
+            linha = ''
+            for item in list(l):
+                if item == None:
                     linha += "[ ]"
-            print(linha,end='\n')
+                elif item.cor == color.BRANCO:
+                    linha += "[\033[32m\u2666\033[0m]"
+                else:
+                    linha += "[\033[94m\u2666\033[0m]"
+            print(linha, end="\n")
 
 class tipoMenu(Enum):
     NENHUM = None
@@ -176,8 +161,8 @@ class menu():
         self.menus = [tipoMenu.iniciarPartida, tipoMenu.adicionarJogador, tipoMenu.adicionarComputador, tipoMenu.removerJogador, tipoMenu.configuracao]
         self.p = None
     def carregar(self):
-        os.system('cls') # on windows
-        os.system('cls' if os.name == 'nt' else 'clear')
+        # os.system('cls') # on windows
+        # os.system('cls' if os.name == 'nt' else 'clear')
         print('______________________________ \033[91mREVERSI\033[0m_______________________________')
         print('=====================================================================')
         print('1------------------------------- 1 2--------------------------------2')
