@@ -72,7 +72,7 @@ class partida():
             self.tabuleiro.desenha()
             novaPeca = None
             while(True):
-                posicao = str(input('\nVez do Jogador {}: '.format(self.jogadorVez.nome))).lower()
+                posicao = str(input('\nVez do Jogador {}: '.format(self.jogadorVez.nomeColorido()))).lower()
                 match = re.search('[12345678][abcdefgh]', posicao)
                 if match:
                     novaPeca = peca(int(posicao[0])-1,  self.tabuleiro.alf.index(str(posicao[1]).upper()), self.jogadorVez.cor)
@@ -86,13 +86,15 @@ class partida():
             self.tabuleiro.adicionaPeca(novaPeca)
 
             self.defineVez()
+    def topo(self):
+        print('______________________________ \033[91mREVERSI\033[0m_______________________________')
+        print('=====================================================================')
 
     def placa(self):
-        print('______________________________ REVERSI_______________________________')
-        print('=====================================================================')
+        self.topo()
         print('Placar')
         for j in self.jogadores:
-            print('Jogador {0}: {1}'.format(j.nome, self.tabuleiro.contaPecas(j.cor)))
+            print('Jogador {0}: {1}'.format(j.nomeColorido(), self.tabuleiro.contaPecas(j.cor)))
 
 class peca():
     def __init__(self, eixoX, eixoY, color):
@@ -137,7 +139,7 @@ class jogador():
         corPeca = { 
             color.BRANCO : colors['green'], 
             color.PRETO : colors['blue'],
-            color.NENHUM: "\033[0m]"
+            color.NENHUM: "\033[0m"
         }
         
         return "{0}{1}{2}".format(corPeca[self.cor], self.nome, corPeca[color.NENHUM])
@@ -159,13 +161,14 @@ class tabuleiro():
 
     def contaPecas(self, cor):
         pecas = [p for l in list(self.matris) for p in list(l) if isinstance(p, peca) and p.cor == cor]
-        return pecas.count
+        return len(pecas)
     
     def desenha(self):
         print("  "+"  ".join(self.alf))
-            
-        for idx, l in list(self.matris):
-            linha = str(idx+1)
+        conta = 0
+        for l in list(self.matris):
+            conta+=1
+            linha = str(conta)
             for item in list(l):
                 if item == None:
                     linha += "[ ]"
@@ -189,8 +192,7 @@ class menu():
         self.p = None
     def carregar(self):
         os.system('cls' if os.name == 'nt' else 'clear')
-        print('______________________________ \033[91mREVERSI\033[0m_______________________________')
-        print('=====================================================================')
+        self.p.topo()
         print('1------------------------------- 1 2--------------------------------2')
         j1 = self.p.buscaJogador(color.PRETO) or "Sem Jogador"
         if isinstance(j1, jogador): j1 = j1.nomeColorido() 
