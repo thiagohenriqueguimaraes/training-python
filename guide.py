@@ -427,8 +427,20 @@ words = ['abc', 'b', 'c']
 # tab[0][0]= A()
 # print([c for l in list(tab) for c in list(l) if isinstance(c, A) and c.nome == 'thiago'][0].nome)
 
-import sys
-import os
-os.system('cls' if os.name == 'nt' else 'clear')
-print("\t\t\033[94m      || ||\033[92m ||\ ||  \033[91m// \\\\\n\033[0m")
+# import sys
+# import os
+# os.system('cls' if os.name == 'nt' else 'clear')
+# print("\t\t\033[94m      || ||\033[92m ||\ ||  \033[91m// \\\\\n\033[0m")
+
+
+matrix = [
+    [11, 21, 31],
+    [21, 22, 23],
+    [31, 32, 33],
+]
+
+
+
+for x in reversed(matrix[1]):
+    print(x)
 

@@ -84,7 +84,9 @@ class partida():
                     print('\nEscolha a linha de 1 a 8 e a coluna A à H: exemplo A1')
                 
             self.tabuleiro.adicionaPeca(novaPeca)
-
+            self.tabuleiro.modificaDireitaCores(novaPeca)
+            self.tabuleiro.modificaEsquerdaCores(novaPeca)
+            self.tabuleiro.modificaBaixoCores(novaPeca)
             self.defineVez()
     def topo(self):
         print('______________________________ \033[91mREVERSI\033[0m_______________________________')
@@ -158,6 +160,34 @@ class tabuleiro():
 
     def adicionaPeca(self, peca):
         self.matris[peca.eixoX][peca.eixoY] = peca
+
+    def modificaDireitaCores(self, peca):
+        pecas = []
+        for p in self.matris[peca.eixoX][peca.eixoY+1:8]:
+            if p == None or p.cor == peca.cor:
+                for p2 in pecas:
+                    p2.cor = peca.cor
+                return
+            pecas.append(p)
+
+    def modificaEsquerdaCores(self, peca):
+        pecas = []
+        for p in reversed(self.matris[peca.eixoX][0:peca.eixoY]):
+            if p == None or p.cor == peca.cor:
+                for p2 in pecas:
+                    p2.cor = peca.cor
+                return
+            pecas.append(p)
+
+    def modificaBaixoCores(self, peca):
+        pecas = []
+        matrizTransposta = list(zip(*self.matris))
+        for p in list(matrizTransposta[peca.eixoY])[peca.eixoX+1:8]:
+            if p == None or p.cor == peca.cor:
+                for p2 in pecas:
+                    p2.cor = peca.cor
+                return
+            pecas.append(p)
 
     def contaPecas(self, cor):
         pecas = [p for l in list(self.matris) for p in list(l) if isinstance(p, peca) and p.cor == cor]
