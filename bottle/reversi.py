@@ -16,7 +16,7 @@ class color(Enum):
     BRANCO = 1
     PRETO = 2
 
-class configuracao():
+# class configuracao():
     
 class partida():
     def __init__(self):
@@ -89,6 +89,9 @@ class partida():
             self.tabuleiro.modificaDireitaCores(novaPeca)
             self.tabuleiro.modificaEsquerdaCores(novaPeca)
             self.tabuleiro.modificaBaixoCores(novaPeca)
+            self.tabuleiro.modificaCimaCores(novaPeca)
+            self.tabuleiro.modificaDireitaBaixoCores(novaPeca)
+            self.tabuleiro.modificaEsquerdaBaixoCores(novaPeca)
             self.defineVez()
     def topo(self):
         print('______________________________ \033[91mREVERSI\033[0m_______________________________')
@@ -166,7 +169,8 @@ class tabuleiro():
     def modificaDireitaCores(self, peca):
         pecas = []
         for p in self.matris[peca.eixoX][peca.eixoY+1:8]:
-            if p == None or p.cor == peca.cor:
+            if p == None: return
+            if p.cor == peca.cor:
                 for p2 in pecas:
                     p2.cor = peca.cor
                 return
@@ -175,22 +179,62 @@ class tabuleiro():
     def modificaEsquerdaCores(self, peca):
         pecas = []
         for p in reversed(self.matris[peca.eixoX][0:peca.eixoY]):
-            if p == None or p.cor == peca.cor:
+            if p == None: return
+            if p.cor == peca.cor:
                 for p2 in pecas:
                     p2.cor = peca.cor
                 return
             pecas.append(p)
 
     def modificaBaixoCores(self, peca):
-        pecas = []
-        matrizTransposta = list(zip(*self.matris))
-        for p in list(matrizTransposta[peca.eixoY])[peca.eixoX+1:8]:
-            if p == None or p.cor == peca.cor:
+        pecas = []        
+        for index in range(peca.eixoX+1, 8):
+            p = self.matris[index][peca.eixoY]
+            if p == None: return
+            if p.cor == peca.cor:
                 for p2 in pecas:
                     p2.cor = peca.cor
                 return
             pecas.append(p)
 
+    def modificaEsquerdaBaixoCores(self, peca):
+        pecas = []
+        y = peca.eixoY
+        for index in range(peca.eixoX+1, 8-peca.eixoX):
+            y -=1
+            p = self.matris[index][y]
+            if p == None: return
+            if p.cor == peca.cor:
+                for p2 in pecas:
+                    p2.cor = peca.cor
+                return
+            pecas.append(p)
+
+    def modificaDireitaBaixoCores(self, peca):
+        pecas = []
+        y = peca.eixoY
+        for index in range(peca.eixoX+1, 8-peca.eixoX):
+            y +=1
+            p = self.matris[index][y]
+            if p == None: return
+            if p.cor == peca.cor:
+                for p2 in pecas:
+                    p2.cor = peca.cor
+                return
+            pecas.append(p)
+
+    def modificaCimaCores(self, peca):
+        pecas = []        
+        for index in range(peca.eixoX-1, -1, -1):
+            p = self.matris[index][peca.eixoY]
+            if p == None: return
+            if p.cor == peca.cor:
+                for p2 in pecas:
+                    p2.cor = peca.cor
+                return
+            pecas.append(p)
+    # def modificaEsquerdaCimaCores(self, peca):
+    # def modificaDireitaCimaCores(self, peca):
     def contaPecas(self, cor):
         pecas = [p for l in list(self.matris) for p in list(l) if isinstance(p, peca) and p.cor == cor]
         return len(pecas)
@@ -285,4 +329,10 @@ class menu():
     def exibeMenuAdicionarComputador(self):
         return len(self.p.jogadores) == 1
 
-menu().iniciar()
+
+#menu().iniciar()
+os.system('cls' if os.name == 'nt' else 'clear')
+partida = partida()
+partida.adicionarJogador(jogador('A'))
+partida.adicionarJogador(jogador('B'))
+partida.iniciar()
