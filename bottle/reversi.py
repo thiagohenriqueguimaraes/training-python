@@ -16,6 +16,8 @@ class color(Enum):
     BRANCO = 1
     PRETO = 2
 
+class configuracao():
+    
 class partida():
     def __init__(self):
         self.jogadores = []
@@ -141,7 +143,7 @@ class jogador():
         corPeca = { 
             color.BRANCO : colors['green'], 
             color.PRETO : colors['blue'],
-            color.NENHUM: "\033[0m"
+            color.NENHUM: colors['white']
         }
         
         return "{0}{1}{2}".format(corPeca[self.cor], self.nome, corPeca[color.NENHUM])
