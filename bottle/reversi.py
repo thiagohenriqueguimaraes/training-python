@@ -1,6 +1,5 @@
 #Game
 #Author: Thiago
-
 import os
 import sys
 import random
@@ -71,7 +70,7 @@ class partida():
         self.defineVez()
         while(self.fim() == False):
             self.placa()
-            self.tabuleiro.desenha()
+            self.tabuleiro.desenha(self.jogadorVez.cor)
             novaPeca = None
             while(True):
                 posicao = str(input('\nVez do Jogador {}: '.format(self.jogadorVez.nomeColorido()))).lower()
@@ -222,7 +221,7 @@ class tabuleiro():
                     p2.cor = peca.cor
                 return
             pecas.append(p)
-
+    
     def modificaCimaCores(self, peca):
         pecas = []        
         for index in range(peca.eixoX-1, -1, -1):
@@ -233,21 +232,176 @@ class tabuleiro():
                     p2.cor = peca.cor
                 return
             pecas.append(p)
-    # def modificaEsquerdaCimaCores(self, peca):
-    # def modificaDireitaCimaCores(self, peca):
+    #Errado
+    def modificaEsquerdaCimaCores(self, peca):
+        pecas = []
+        y = peca.eixoY
+        for index in range(peca.eixoX+1, 8-peca.eixoX):
+            y +=1
+            p = self.matris[index][y]
+            if p == None: return
+            if p.cor == peca.cor:
+                for p2 in pecas:
+                    p2.cor = peca.cor
+                return
+            pecas.append(p)
+    #Errado
+    def modificaDireitaCimaCores(self, peca):
+        pecas = []
+        y = peca.eixoY
+        for index in range(peca.eixoX+1, 8-peca.eixoX):
+            y +=1
+            p = self.matris[index][y]
+            if p == None: return
+            if p.cor == peca.cor:
+                for p2 in pecas:
+                    p2.cor = peca.cor
+                return
+            pecas.append(p)
+
+    def podeJogarDireita(self, peca):
+        pecas = []
+        for p in self.matris[peca.eixoX][peca.eixoY+1:8]:
+            if p == None: return
+            if p.cor == peca.cor:
+                if len(pecas) > 0:
+                    p2.cor = peca.cor
+                return
+            pecas.append(p)
+
+    def podeJogarEsquerda(self, peca):
+        pecas = []
+        for p in reversed(self.matris[peca.eixoX][0:peca.eixoY]):
+            if p == None: return False
+            if p.cor == peca.cor:
+                if len(pecas) > 0:
+                    return True
+                return True
+            pecas.append(p)
+
+    def podeJogarBaixo(self, peca):
+        pecas = []        
+        for index in range(peca.eixoX+1, 8):
+            p = self.matris[index][peca.eixoY]
+            if p == None: return False
+            if p.cor == peca.cor:
+                if len(pecas) > 0:
+                    return True
+                return False
+            pecas.append(p)
+
+    def podeJogarEsquerdaBaixo(self, peca):
+        pecas = []
+        y = peca.eixoY
+        for index in range(peca.eixoX+1, 8-peca.eixoX):
+            y -=1
+            p = self.matris[index][y]
+            if p == None: return False
+            if p.cor == peca.cor:
+                if len(pecas) > 0:
+                    return True
+                return False
+            pecas.append(p)
+
+    def podeJogarDireitaBaixo(self, peca):
+        pecas = []
+        y = peca.eixoY
+        for index in range(peca.eixoX+1, 8-peca.eixoX):
+            y +=1
+            p = self.matris[index][y]
+            if p == None: return False
+            if p.cor == peca.cor:
+                if len(pecas) > 0:
+                    return True
+                return False
+            pecas.append(p)
+    
+    def podeJogarCima(self, peca):
+        pecas = []        
+        for index in range(peca.eixoX-1, -1, -1):
+            p = self.matris[index][peca.eixoY]
+            if p == None: return False
+            if p.cor == peca.cor:
+                if len(pecas) > 0:
+                    return True
+                return False
+            pecas.append(p)
+    
+    def podeJogarEsquerdaCima(self, peca):
+        pecas = []
+        y = peca.eixoY
+        for index in range(peca.eixoX+1, 8-peca.eixoX):
+            y +=1
+            p = self.matris[index][y]
+            if p == None: return False
+            if p.cor == peca.cor:
+                if len(pecas) > 0:
+                    return True
+                return False
+            pecas.append(p)
+    
+    def podeJogarDireitaCima(self, peca):
+        pecas = []
+        y = peca.eixoY
+        for index in range(peca.eixoX+1, 8-peca.eixoX):
+            y +=1
+            p = self.matris[index][y]
+            if p == None: return False
+            if p.cor == peca.cor:
+                if len(pecas) > 0:
+                    return True
+                return False
+            pecas.append(p)
+    
+
+    def posicoesOndePodeJogar(self, color):
+        pecas = []
+        for l in list(self.matris):
+            for p in list(l):
+                if p != None and p.cor != color:
+                    pecaNova = self.peca(p.eixoX, p.eixoY-1, color)
+                    if self.podeJogarEsquerda(pecaNova):
+                        pecas.append(pecaNova)
+                    pecaNova = self.peca(p.eixoX+1, p.eixoY, color)
+                    if self.podeJogarBaixo(pecaNova):
+                        pecas.append(pecaNova)
+                    pecaNova = self.peca(p.eixoX-1, p.eixoY, color)
+                    if self.podeJogarCima(pecaNova):
+                        pecas.append(pecaNova)
+                    pecaNova = self.peca(p.eixoX, p.eixoY+1, color)
+                    if self.podeJogarDireita(pecaNova):
+                        pecas.append(pecaNova)
+                    pecaNova = self.peca(p.eixoX-1, p.eixoY+1, color)
+                    if self.podeJogarDireitaCima(pecaNova):
+                        pecas.append(pecaNova)
+                    pecaNova = self.peca(p.eixoX-1, p.eixoY-1, color)
+                    if self.podeJogarEsquerdaCima(pecaNova):
+                        pecas.append(pecaNova)
+                    pecaNova = self.peca(p.eixoX +1, p.eixoY+1, color)
+                    if self.podeJogarEsquerdaBaixo(pecaNova):
+                        pecas.append(pecaNova)
+                    pecaNova = self.peca(p.eixoX +1, p.eixoY-1, color)
+                    if self.podeJogarEsquerdaBaixo(pecaNova) == True:
+                        pecas.append(pecaNova)    
+        return pecas
+
     def contaPecas(self, cor):
         pecas = [p for l in list(self.matris) for p in list(l) if isinstance(p, peca) and p.cor == cor]
         return len(pecas)
     
-    def desenha(self):
+    def desenha(self, cor):
         print("  "+"  ".join(self.alf))
         conta = 0
+        pecas = self.posicoesOndePodeJogar(cor)
         for l in list(self.matris):
             conta+=1
             linha = str(conta)
-            for item in list(l):
+            for ixd, item in list(l):
                 if item == None:
-                    linha += "[ ]"
+                    if len(x for x in pecas if x.eixoX == conta-1 and x.eixoY == ixd) > 0:
+                        linha += "[*]"
+                    else: 
+                        linha += "[ ]"
                 elif item.cor == color.BRANCO:
                     linha += "[\033[32m\u2666\033[0m]"
                 else:
