@@ -391,14 +391,14 @@ class tabuleiro():
     
     def desenha(self, cor):
         print("  "+"  ".join(self.alf))
-        conta = 0
+        # # conta = 0
         pecas = self.posicoesOndePodeJogar(cor)
-        for l in list(self.matris):
-            conta+=1
-            linha = str(conta)
-            for ixd, item in list(l):
+        for idxr, l in enumerate(self.matris):
+            # conta+=1
+            linha = str(idxr+1)
+            for idx, item in enumerate(l):
                 if item == None:
-                    if len(x for x in pecas if x.eixoX == conta-1 and x.eixoY == ixd) > 0:
+                    if len(x for x in pecas if x.eixoX == idxr and x.eixoY == idx) > 0:
                         linha += "[*]"
                     else: 
                         linha += "[ ]"

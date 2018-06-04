@@ -431,16 +431,13 @@ words = ['abc', 'b', 'c']
 # import os
 # os.system('cls' if os.name == 'nt' else 'clear')
 # print("\t\t\033[94m      || ||\033[92m ||\ ||  \033[91m// \\\\\n\033[0m")
+import os
+import sys
 
+x = []
 
-matrix = [
-    [11, 21, 31],
-    [21, 22, 23],
-    [31, 32, 33],
-]
+y = len(r for r in x if r != None and r.id == 0)
 
+print(str(y))
 
-
-for x in reversed(matrix[1]):
-    print(x)
 
