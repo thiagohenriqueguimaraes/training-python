@@ -436,8 +436,8 @@ import sys
 
 x = []
 
-y = len(r for r in x if r != None and r.id == 0)
+y = [r for r in list(x) if r != None and r.id == 0]
 
-print(str(y))
+print(str(len(y)))
 
 

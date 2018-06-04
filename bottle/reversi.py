@@ -398,7 +398,7 @@ class tabuleiro():
             linha = str(idxr+1)
             for idx, item in enumerate(l):
                 if item == None:
-                    if len(x for x in pecas if x.eixoX == idxr and x.eixoY == idx) > 0:
+                    if len([x for x in pecas if x.eixoX == idxr and x.eixoY == idx]) > 0:
                         linha += "[*]"
                     else: 
                         linha += "[ ]"
