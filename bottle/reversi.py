@@ -260,18 +260,20 @@ class tabuleiro():
             pecas.append(p)
 
     def podeJogarDireita(self, peca):
-        pecas = []
-        for p in self.matris[peca.eixoX][peca.eixoY+1:8]:
-            if p == None: return
+        pecas = [peca]
+        for coluna in range(peca.eixoY, 8):
+            p = self.matris[peca.eixoX][coluna]
+            if p == None: return True
             if p.cor == peca.cor:
                 if len(pecas) > 0:
-                    p.cor = peca.cor
-                return
+                    return True
+                return False
             pecas.append(p)
 
     def podeJogarEsquerda(self, peca):
-        pecas = []
-        for p in reversed(self.matris[peca.eixoX][0:peca.eixoY]):
+        pecas = [peca]
+        for coluna in range(peca.eixoY, -1, -1):
+            p = self.matris[peca.eixoX][coluna]
             if p == None: return False
             if p.cor == peca.cor:
                 if len(pecas) > 0:
@@ -280,7 +282,7 @@ class tabuleiro():
             pecas.append(p)
 
     def podeJogarBaixo(self, peca):
-        pecas = []        
+        pecas = [peca]        
         for index in range(peca.eixoX+1, 8):
             p = self.matris[index][peca.eixoY]
             if p == None: return False
@@ -291,7 +293,7 @@ class tabuleiro():
             pecas.append(p)
 
     def podeJogarEsquerdaBaixo(self, peca):
-        pecas = []
+        pecas = [peca]
         y = peca.eixoY
         for index in range(peca.eixoX+1, 8-peca.eixoX):
             y -=1
@@ -304,7 +306,7 @@ class tabuleiro():
             pecas.append(p)
 
     def podeJogarDireitaBaixo(self, peca):
-        pecas = []
+        pecas = [peca]
         y = peca.eixoY
         for index in range(peca.eixoX+1, 8-peca.eixoX):
             y +=1
@@ -317,7 +319,7 @@ class tabuleiro():
             pecas.append(p)
     
     def podeJogarCima(self, peca):
-        pecas = []        
+        pecas = [peca]        
         for index in range(peca.eixoX-1, -1, -1):
             p = self.matris[index][peca.eixoY]
             if p == None: return False
@@ -328,7 +330,7 @@ class tabuleiro():
             pecas.append(p)
     
     def podeJogarEsquerdaCima(self, peca):
-        pecas = []
+        pecas = [peca]
         y = peca.eixoY
         for index in range(peca.eixoX+1, 8-peca.eixoX):
             y +=1
@@ -341,7 +343,7 @@ class tabuleiro():
             pecas.append(p)
     
     def podeJogarDireitaCima(self, peca):
-        pecas = []
+        pecas = [peca]
         y = peca.eixoY
         for index in range(peca.eixoX+1, 8-peca.eixoX):
             y +=1
