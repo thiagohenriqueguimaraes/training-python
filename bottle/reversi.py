@@ -259,27 +259,30 @@ class tabuleiro():
                 return
             pecas.append(p)
 
-    def podeJogarDireita(self, peca):
-        pecas = [peca]
-        for coluna in range(peca.eixoY, 8):
-            p = self.matris[peca.eixoX][coluna]
-            if p == None: return True
-            if p.cor == peca.cor:
-                if len(pecas) > 0:
-                    return True
-                return False
-            pecas.append(p)
+    def podeJogarDireita(self, p, pecas):
+        if self.matris[p.eixoX][p.eixoY+1] != None: return pecas
+        contaPecas = 0
+        for coluna in range(p.eixoY, -1,-1):
+            p2 = self.matris[p.eixoX][coluna]
+            if p2 == None: return pecas
+            if p2.cor != p.cor:
+                if contaPecas > 0:
+                    return pecas.append(peca(p.eixoX, p.eixoX+1, color.NENHUM))
+                return pecas
+            contaPecas+=1
 
-    def podeJogarEsquerda(self, peca):
-        pecas = [peca]
-        for coluna in range(peca.eixoY, -1, -1):
-            p = self.matris[peca.eixoX][coluna]
-            if p == None: return False
-            if p.cor == peca.cor:
-                if len(pecas) > 0:
-                    return True
-                return True
-            pecas.append(p)
+    def podeJogarEsquerda(self, p, pecas):
+        if self.matris[p.eixoX][p.eixoY-1] != None: return pecas
+        contaPecas = 0
+        for coluna in range(p.eixoY, 8):
+            p2 = self.matris[p.eixoX][coluna]
+            if p2 == None: return pecas
+            if p2.cor != p.cor:
+                if contaPecas > 0:
+                    return pecas.append(peca(p.eixoX, p.eixoX-1, color.NENHUM))
+                return pecas
+            contaPecas+=1
+        
 
     def podeJogarBaixo(self, peca):
         pecas = [peca]        
@@ -361,30 +364,14 @@ class tabuleiro():
         for l in list(self.matris):
             for p in list(l):
                 if p != None and p.cor != color:
-                    pecaNova = peca(p.eixoX, p.eixoY-1, color)
-                    if self.podeJogarEsquerda(pecaNova):
-                        pecas.append(pecaNova)
-                    pecaNova = peca(p.eixoX+1, p.eixoY, color)
-                    if self.podeJogarBaixo(pecaNova):
-                        pecas.append(pecaNova)
-                    pecaNova = peca(p.eixoX-1, p.eixoY, color)
-                    if self.podeJogarCima(pecaNova):
-                        pecas.append(pecaNova)
-                    pecaNova = peca(p.eixoX, p.eixoY+1, color)
-                    if self.podeJogarDireita(pecaNova):
-                        pecas.append(pecaNova)
-                    pecaNova = peca(p.eixoX-1, p.eixoY+1, color)
-                    if self.podeJogarDireitaCima(pecaNova):
-                        pecas.append(pecaNova)
-                    pecaNova = peca(p.eixoX-1, p.eixoY-1, color)
-                    if self.podeJogarEsquerdaCima(pecaNova):
-                        pecas.append(pecaNova)
-                    pecaNova = peca(p.eixoX +1, p.eixoY+1, color)
-                    if self.podeJogarEsquerdaBaixo(pecaNova):
-                        pecas.append(pecaNova)
-                    pecaNova = peca(p.eixoX +1, p.eixoY-1, color)
-                    if self.podeJogarEsquerdaBaixo(pecaNova):
-                        pecas.append(pecaNova)    
+                    self.podeJogarEsquerda(p, pecas)
+                    self.podeJogarDireita(p, pecas)
+                    # self.podeJogarBaixo(p, pecas)
+                    # self.podeJogarCima(p, pecas)
+                    # self.podeJogarDireitaCima(p, pecas)
+                    # self.podeJogarEsquerdaCima(p, pecas)
+                    # self.podeJogarEsquerdaBaixo(p, pecas)
+                    # self.podeJogarEsquerdaBaixo(p, pecas)
         return pecas
 
     def contaPecas(self, cor):
